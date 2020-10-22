@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t calebflores/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true calebflores/react-test npm test
+
+after_success:
+  - docker build -t calebflores/multi-client ./client
+  - docker build -t calebflores/multi-nginx ./nginx
+  - docker built -t calebflores/multi-server ./server
+  - docker build -t calebflores/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push calebflores/multi-client
+  - docker push calebflores/multi-nginx
+  - docker push calebflores/multi-server
+  - docker push calebflores/multi-worker
