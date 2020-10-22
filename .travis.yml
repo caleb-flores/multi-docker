@@ -17,4 +17,16 @@ after_success:
   - docker push calebflores/multi-client
   - docker push calebflores/multi-nginx
   - docker push calebflores/multi-server
-  - docker push calebflores/multi-worker
+  - docker push calebflores/multi-
+    
+deploy:
+  provider: elasticbeanstalk
+  region: 'us-east-2'
+  app: 'multi-docker'
+  env: 'MultiDocker-env'
+  bucket_name: 'elasticbeanstalk-us-east-2-749536246603'
+  bucket_path: 'docker-multi'
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
